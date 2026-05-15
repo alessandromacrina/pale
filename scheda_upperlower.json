@@ -1,0 +1,210 @@
+{
+  "name": "Upper/Lower 4 giorni — Massa e Forza",
+  "description": "Scheda 4 giorni split Upper/Lower, livello intermedio. Focus massa muscolare e forza. Ogni gruppo muscolare viene allenato 2x a settimana.",
+  "days": [
+    {
+      "name": "Giorno 1 – Upper A",
+      "focus": "Forza",
+      "muscle_groups": ["Petto", "Schiena", "Spalle", "Braccia"],
+      "exercises": [
+        {
+          "name": "Panca piana (bilanciere)",
+          "type": "compound",
+          "sets": 4,
+          "reps": "4-6",
+          "rest_seconds": 210,
+          "notes": "Esercizio principale del giorno"
+        },
+        {
+          "name": "Trazioni / Lat machine",
+          "type": "compound",
+          "sets": 4,
+          "reps": "4-6",
+          "rest_seconds": 180,
+          "notes": "Presa prona, larghezza spalle"
+        },
+        {
+          "name": "Military press (bilanciere)",
+          "type": "compound",
+          "sets": 4,
+          "reps": "5-7",
+          "rest_seconds": 150,
+          "notes": "In piedi o seduto"
+        },
+        {
+          "name": "Rematore con bilanciere",
+          "type": "compound",
+          "sets": 4,
+          "reps": "5-7",
+          "rest_seconds": 150,
+          "notes": "Busto inclinato, presa prona"
+        },
+        {
+          "name": "Dips ai paralleli",
+          "type": "isolation",
+          "sets": 3,
+          "reps": "8-10",
+          "rest_seconds": 120,
+          "notes": "Leggera inclinazione in avanti per il petto"
+        }
+      ]
+    },
+    {
+      "name": "Giorno 2 – Lower A",
+      "focus": "Forza",
+      "muscle_groups": ["Quadricipiti", "Femorali", "Glutei", "Polpacci"],
+      "exercises": [
+        {
+          "name": "Squat con bilanciere",
+          "type": "compound",
+          "sets": 5,
+          "reps": "4-6",
+          "rest_seconds": 240,
+          "notes": "Esercizio principale — scendi a parallela"
+        },
+        {
+          "name": "Romanian Deadlift",
+          "type": "compound",
+          "sets": 4,
+          "reps": "6-8",
+          "rest_seconds": 180,
+          "notes": "Sensazione di stiramento nei femorali"
+        },
+        {
+          "name": "Leg press",
+          "type": "compound",
+          "sets": 3,
+          "reps": "8-10",
+          "rest_seconds": 120,
+          "notes": "Piedi medi, scendi fino a 90°"
+        },
+        {
+          "name": "Leg curl sdraiato",
+          "type": "isolation",
+          "sets": 3,
+          "reps": "10-12",
+          "rest_seconds": 90,
+          "notes": "Movimento controllato in eccentrica"
+        },
+        {
+          "name": "Calf raises in piedi",
+          "type": "isolation",
+          "sets": 4,
+          "reps": "12-15",
+          "rest_seconds": 90,
+          "notes": "Pausa di 1 sec in cima"
+        }
+      ]
+    },
+    {
+      "name": "Giorno 3 – Upper B",
+      "focus": "Ipertrofia",
+      "muscle_groups": ["Petto", "Schiena", "Spalle", "Braccia"],
+      "exercises": [
+        {
+          "name": "Panca inclinata (manubri)",
+          "type": "compound",
+          "sets": 4,
+          "reps": "8-12",
+          "rest_seconds": 120,
+          "notes": "30-45° di inclinazione"
+        },
+        {
+          "name": "Lat machine presa neutra",
+          "type": "compound",
+          "sets": 4,
+          "reps": "8-12",
+          "rest_seconds": 120,
+          "notes": "Tira verso il petto, non al collo"
+        },
+        {
+          "name": "Shoulder press (manubri)",
+          "type": "compound",
+          "sets": 4,
+          "reps": "10-12",
+          "rest_seconds": 120,
+          "notes": "Seduto, schiena appoggiata"
+        },
+        {
+          "name": "Croci ai cavi bassi",
+          "type": "isolation",
+          "sets": 3,
+          "reps": "12-15",
+          "rest_seconds": 90,
+          "notes": "Focus sulla contrazione del petto"
+        },
+        {
+          "name": "Curl manubri alternato",
+          "type": "isolation",
+          "sets": 3,
+          "reps": "10-12",
+          "rest_seconds": 90,
+          "notes": "Supina, no oscillazione"
+        },
+        {
+          "name": "Tricipiti cavi (push-down)",
+          "type": "isolation",
+          "sets": 3,
+          "reps": "12-15",
+          "rest_seconds": 90,
+          "notes": "Gomiti fermi ai fianchi"
+        }
+      ]
+    },
+    {
+      "name": "Giorno 4 – Lower B",
+      "focus": "Ipertrofia",
+      "muscle_groups": ["Quadricipiti", "Femorali", "Glutei", "Polpacci"],
+      "exercises": [
+        {
+          "name": "Leg press (piedi alti)",
+          "type": "compound",
+          "sets": 4,
+          "reps": "10-12",
+          "rest_seconds": 120,
+          "notes": "Piedi più alti per enfatizzare i glutei"
+        },
+        {
+          "name": "Romanian Deadlift (manubri)",
+          "type": "compound",
+          "sets": 3,
+          "reps": "10-12",
+          "rest_seconds": 120,
+          "notes": "Range di movimento ampio"
+        },
+        {
+          "name": "Affondi camminati",
+          "type": "compound",
+          "sets": 3,
+          "reps": "12",
+          "rest_seconds": 120,
+          "notes": "Con manubri, passo lungo"
+        },
+        {
+          "name": "Leg extension",
+          "type": "isolation",
+          "sets": 3,
+          "reps": "12-15",
+          "rest_seconds": 90,
+          "notes": "Pausa 1 sec a estensione completa"
+        },
+        {
+          "name": "Leg curl sdraiato",
+          "type": "isolation",
+          "sets": 3,
+          "reps": "12-15",
+          "rest_seconds": 90,
+          "notes": "Eccentrica lenta (3 sec)"
+        },
+        {
+          "name": "Calf raises (seduto)",
+          "type": "isolation",
+          "sets": 4,
+          "reps": "15-20",
+          "rest_seconds": 60,
+          "notes": "Colpisce il soleo"
+        }
+      ]
+    }
+  ]
+}
