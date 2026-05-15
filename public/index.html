@@ -445,71 +445,176 @@ function fmtRest(s) { if (!s) return '—'; return s >= 60 ? `${Math.floor(s/60)
 function startWorkout(planId, dayIndex) {
   const plan = S.currentPlan;
   const day  = plan.data.days[dayIndex];
+
   S.activeWorkout = {
-    planId, planName: plan.name, dayIndex,
+    planId,
+    planName: plan.name,
+    dayIndex,
     dayName: day.name,
     exercises: day.exercises,
+
     sets: day.exercises.flatMap((ex, ei) =>
-      Array.from({length: ex.sets}, (_, si) => ({ ei, si, weight: '', reps: '', done: false }))
+      Array.from({ length: ex.sets }, (_, si) => ({
+        ei,
+        si,
+        weight: '',
+        reps: '',
+        done: false
+      }))
     ),
+
     startTime: Date.now(),
   };
+
   stopRestTimer();
   go('workout');
 }
 
 function viewWorkout() {
   const W = S.activeWorkout;
-  if (!W) return '<div class="content"><p>Nessun allenamento attivo.</p></div>';
+
+  if (!W) {
+    return '<div class="content"><p>Nessun allenamento attivo.</p></div>';
+  }
+
   const elapsed = Math.floor((Date.now() - W.startTime) / 60000);
 
   const exBlocks = W.exercises.map((ex, ei) => {
+
     const exSets = W.sets.filter(s => s.ei === ei);
+
     return `
       <div class="ex-block card">
+
         <div class="ex-block-header">
           <div>
             <div class="ex-block-name">${ex.name}</div>
-            ${ex.notes ? `<div class="ex-block-note">${ex.notes}</div>` : ''}
+
+            ${ex.notes
+              ? `<div class="ex-block-note">${ex.notes}</div>`
+              : ''
+            }
           </div>
-          <div class="ex-block-target">${ex.sets}×${ex.reps}</div>
+
+          <div class="ex-block-target">
+            ${ex.sets}×${ex.reps}
+          </div>
         </div>
-        <div class="set-header"><span>N°</span><span>Kg</span><span>Rip.</span><span></span></div>
+
+        <div class="set-header">
+          <span>N°</span>
+          <span>Kg</span>
+          <span>Rip.</span>
+          <span></span>
+        </div>
+
         ${exSets.map((set, si) => {
-          const globalIdx = W.sets.findIndex(s => s.ei === ei && s.si === si);
+
+          const globalIdx =
+            W.sets.findIndex(
+              s => s.ei === ei && s.si === si
+            );
+
           return `
             <div class="set-row" id="setrow-${globalIdx}">
-              <div class="set-num">${si+1}</div>
-              <input type="number" inputmode="decimal" placeholder="0" value="${set.weight}"
-                class="${set.done?'done':''}" onchange="updateSet(${globalIdx},'weight',this.value)">
-              <input type="number" inputmode="numeric" placeholder="0" value="${set.reps}"
-                class="${set.done?'done':''}" onchange="updateSet(${globalIdx},'reps',this.value)">
-              <div class="set-check ${set.done?'done':''}" onclick="toggleSet(${globalIdx},${ex.rest_seconds||90})">${ico.check}</div>
-            </div>`;
+
+              <div class="set-num">
+                ${si + 1}
+              </div>
+
+              <input
+                type="number"
+                inputmode="decimal"
+                placeholder="0"
+                value="${set.weight}"
+                class="${set.done ? 'done' : ''}"
+                onchange="updateSet(${globalIdx}, 'weight', this.value)"
+              >
+
+              <input
+                type="number"
+                inputmode="numeric"
+                placeholder="0"
+                value="${set.reps}"
+                class="${set.done ? 'done' : ''}"
+                onchange="updateSet(${globalIdx}, 'reps', this.value)"
+              >
+
+              <div
+                class="set-check ${set.done ? 'done' : ''}"
+                onclick="toggleSet(${globalIdx}, ${ex.rest_seconds || 90})"
+              >
+                ${ico.check}
+              </div>
+
+            </div>
+          `;
         }).join('')}
-      </div>`;
+
+      </div>
+    `;
   }).join('');
 
   const allDone = W.sets.every(s => s.done);
 
   return `
     <div class="workout-header">
+
       <div>
-        <div style="font-size:13px;color:var(--muted)">${W.planName}</div>
-        <div style="font-weight:600;font-size:16px">${W.dayName}</div>
+        <div style="font-size:13px;color:var(--muted)">
+          ${W.planName}
+        </div>
+
+        <div style="font-weight:600;font-size:16px">
+          ${W.dayName}
+        </div>
       </div>
+
       <div class="flex items-center gap-1">
-        <span class="workout-timer-badge">${elapsed}min</span>
-        <button class="btn btn-ghost btn-sm" onclick="if(confirm('Annullare l\\'allenamento?'))go('plan-detail',{id:${W.planId}})">✕</button>
+
+        <span class="workout-timer-badge">
+          ${elapsed}min
+        </span>
+
+        <button
+          class="btn btn-ghost btn-sm"
+          onclick="if(confirm('Annullare l\\'allenamento?'))go('plan-detail',{id:${W.planId}})"
+        >
+          ✕
+        </button>
+
       </div>
     </div>
+
     <div class="content" style="padding-top:12px">
+
       ${exBlocks}
-      ${allDone ? `<button class="btn btn-success btn-block mt-2" onclick="saveWorkout()">✓ Salva allenamento</button>` :
-        `<button class="btn btn-ghost btn-block mt-2" onclick="saveWorkout()">Salva e termina</button>`}
+
+      ${allDone
+        ? `
+          <button
+            class="btn btn-success btn-block mt-2"
+            onclick="saveWorkout()"
+          >
+            ✓ Salva allenamento
+          </button>
+        `
+        : `
+          <button
+            class="btn btn-ghost btn-block mt-2"
+            onclick="saveWorkout()"
+          >
+            Salva e termina
+          </button>
+        `
+      }
+
       <div style="height:80px"></div>
+
     </div>
-    ${restTimerHtml()}`;
+
+    ${restTimerHtml()}
+  `;
 }
 
 function updateSet(idx, field, val) {
@@ -517,88 +622,266 @@ function updateSet(idx, field, val) {
 }
 
 function toggleSet(idx, restSecs) {
+
   const set = S.activeWorkout.sets[idx];
+
   set.done = !set.done;
-  if (set.done) startRestTimer(restSecs, S.activeWorkout.exercises[set.ei].name);
-  else stopRestTimer();
-  render();
-  // Re-render only the changed row to avoid losing focus
+
+  if (set.done) {
+    startRestTimer(
+      restSecs,
+      S.activeWorkout.exercises[set.ei].name
+    );
+  } else {
+    stopRestTimer();
+  }
+
+  updateWorkoutRow(idx);
+}
+
+function updateWorkoutRow(idx) {
+
+  const row = document.getElementById(`setrow-${idx}`);
+
+  if (!row) return;
+
+  const set = S.activeWorkout.sets[idx];
+
+  row.querySelectorAll('input').forEach(input => {
+
+    if (set.done) {
+      input.classList.add('done');
+    } else {
+      input.classList.remove('done');
+    }
+
+  });
+
+  const check = row.querySelector('.set-check');
+
+  if (set.done) {
+    check.classList.add('done');
+  } else {
+    check.classList.remove('done');
+  }
 }
 
 // ── Rest Timer ─────────────────────────────────────────────────────────────────
 function startRestTimer(totalSecs, exName) {
+
   stopRestTimer();
+
   const end = Date.now() + totalSecs * 1000;
-  S.restTimer = { totalSecs, end, exName, interval: null };
-  S.restTimer.interval = setInterval(() => {
-    const remaining = Math.max(0, Math.ceil((end - Date.now()) / 1000));
-    const pct = ((totalSecs - remaining) / totalSecs * 100).toFixed(1);
-    const el = document.getElementById('rest-overlay');
-    if (!el) { stopRestTimer(); return; }
-    document.getElementById('rest-time').textContent = fmtTimer(remaining);
-    document.getElementById('rest-bar').style.width = pct + '%';
-    drawRestCircle(remaining, totalSecs);
-    if (remaining === 0) { stopRestTimer(); playBeep(); }
-  }, 500);
+
+  S.restTimer = {
+    totalSecs,
+    end,
+    exName,
+    interval: null
+  };
+
   renderRestOverlay();
+
+  function tick() {
+
+    const remaining = Math.max(
+      0,
+      Math.ceil((end - Date.now()) / 1000)
+    );
+
+    const pct =
+      ((totalSecs - remaining) / totalSecs * 100);
+
+    const el = document.getElementById('rest-overlay');
+
+    if (!el) {
+      stopRestTimer();
+      return;
+    }
+
+    document.getElementById('rest-time').textContent =
+      fmtTimer(remaining);
+
+    document.getElementById('rest-bar').style.width =
+      pct + '%';
+
+    drawRestCircle(remaining, totalSecs);
+
+    if (remaining <= 0) {
+      stopRestTimer();
+      playBeep();
+    }
+  }
+
+  tick();
+
+  S.restTimer.interval = setInterval(tick, 250);
 }
 
 function stopRestTimer() {
-  if (S.restTimer?.interval) clearInterval(S.restTimer.interval);
+
+  if (S.restTimer?.interval) {
+    clearInterval(S.restTimer.interval);
+  }
+
   S.restTimer = null;
+
   const el = document.getElementById('rest-overlay');
-  if (el) el.remove();
+
+  if (el) {
+    el.remove();
+  }
 }
 
 function renderRestOverlay() {
+
   let el = document.getElementById('rest-overlay');
+
   if (!el) {
-    document.body.insertAdjacentHTML('beforeend', restTimerHtml());
+    document.body.insertAdjacentHTML(
+      'beforeend',
+      restTimerHtml()
+    );
   }
 }
 
 function restTimerHtml() {
+
   if (!S.restTimer) return '';
+
   const t = S.restTimer;
-  const remaining = Math.max(0, Math.ceil((t.end - Date.now()) / 1000));
-  const pct = ((t.totalSecs - remaining) / t.totalSecs * 100).toFixed(1);
+
+  const remaining = Math.max(
+    0,
+    Math.ceil((t.end - Date.now()) / 1000)
+  );
+
+  const pct =
+    ((t.totalSecs - remaining) / t.totalSecs * 100);
+
+  const circ = 2 * Math.PI * 26;
+
   return `
     <div class="rest-overlay" id="rest-overlay">
-      <svg class="rest-circle" viewBox="0 0 60 60" id="rest-svg">
-        <circle cx="30" cy="30" r="26" fill="none" stroke="var(--bg4)" stroke-width="4"/>
-        <circle cx="30" cy="30" r="26" fill="none" stroke="var(--success)" stroke-width="4"
-          stroke-dasharray="${2*Math.PI*26}" stroke-dashoffset="${2*Math.PI*26*(remaining/t.totalSecs)}"
-          stroke-linecap="round" transform="rotate(-90 30 30)" id="rest-arc"/>
+
+      <svg
+        class="rest-circle"
+        viewBox="0 0 60 60"
+      >
+
+        <circle
+          cx="30"
+          cy="30"
+          r="26"
+          fill="none"
+          stroke="var(--bg4)"
+          stroke-width="4"
+        />
+
+        <circle
+          cx="30"
+          cy="30"
+          r="26"
+          fill="none"
+          stroke="var(--success)"
+          stroke-width="4"
+          stroke-dasharray="${circ}"
+          stroke-dashoffset="${circ * (1 - remaining / t.totalSecs)}"
+          stroke-linecap="round"
+          transform="rotate(-90 30 30)"
+          id="rest-arc"
+        />
+
       </svg>
+
       <div class="rest-info">
-        <div class="rest-label">Recupero</div>
-        <div class="rest-time" id="rest-time">${fmtTimer(remaining)}</div>
-        <div class="rest-ex">${t.exName}</div>
-        <div class="rest-progress"><div class="rest-progress-bar" id="rest-bar" style="width:${pct}%"></div></div>
+
+        <div class="rest-label">
+          Recupero
+        </div>
+
+        <div class="rest-time" id="rest-time">
+          ${fmtTimer(remaining)}
+        </div>
+
+        <div class="rest-ex">
+          ${t.exName}
+        </div>
+
+        <div class="rest-progress">
+          <div
+            class="rest-progress-bar"
+            id="rest-bar"
+            style="width:${pct}%"
+          ></div>
+        </div>
+
       </div>
-      <button class="rest-skip" onclick="stopRestTimer()">Salta</button>
-    </div>`;
+
+      <button
+        class="rest-skip"
+        onclick="stopRestTimer()"
+      >
+        Salta
+      </button>
+
+    </div>
+  `;
 }
 
 function drawRestCircle(remaining, total) {
+
   const arc = document.getElementById('rest-arc');
+
   if (!arc) return;
+
   const circ = 2 * Math.PI * 26;
-  arc.setAttribute('stroke-dashoffset', (circ * remaining / total).toFixed(2));
+
+  arc.setAttribute(
+    'stroke-dashoffset',
+    (circ * (1 - remaining / total)).toFixed(2)
+  );
 }
 
-function fmtTimer(s) { return `${Math.floor(s/60)}:${String(s%60).padStart(2,'0')}`; }
+function fmtTimer(seconds) {
+
+  return `${Math.floor(seconds / 60)}:${String(
+    seconds % 60
+  ).padStart(2, '0')}`;
+}
 
 function playBeep() {
+
   try {
+
     const ctx = new AudioContext();
-    const o = ctx.createOscillator(); const g = ctx.createGain();
-    o.connect(g); g.connect(ctx.destination);
-    o.frequency.value = 880; g.gain.setValueAtTime(0.3, ctx.currentTime);
-    g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.5);
-    o.start(); o.stop(ctx.currentTime + 0.5);
+
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+
+    osc.frequency.value = 880;
+
+    gain.gain.setValueAtTime(
+      0.3,
+      ctx.currentTime
+    );
+
+    gain.gain.exponentialRampToValueAtTime(
+      0.001,
+      ctx.currentTime + 0.5
+    );
+
+    osc.start();
+
+    osc.stop(ctx.currentTime + 0.5);
+
   } catch {}
 }
+```
+
 
 async function saveWorkout() {
   const W = S.activeWorkout;
